@@ -22,8 +22,55 @@ def main():
 
     # print('\nTodo o dicionario: \n%s' % dict_professores)
 
-    # input("vai salvar o arquivo em formato json - Digite qualquer caracter e tecle enter")
-    # with open('dict_professores.json', 'w') as f:
+    input("vai salvar o arquivo em formato json - Digite qualquer caracter e tecle enter")
+    with open('dict_professores.json', 'w') as f:
+        json.dump(dict_professores,f)
+        # alternativa
+        # f.write(json.dumps(dict_professores))
+        
+    input("vai ler o json - Tecle enter")
+    print("\n\n****************LENDO O JSON SALVO****************")
+    dicionario_lido = {}
+    with open('dict_professores.json') as f:
+        dicionario_lido = json.load(f)
+        # alternativa
+        # dicionario_lido = json.load(f.read())
+
+        for professor_id in dicionario_lido:
+            print('****************PROFESSOR****************')
+            print('\tcodigo: %s' % professor_id)
+            print('\tnome: %s' % dict_professores[professor_id]['nome'])
+            print('\tdisciplinas')
+            lista_disciplinas = dicionario_lido[professor_id]['disciplinas']
+            # lista_disciplinas.append('EEE02')
+            for disciplina in lista_disciplinas:
+                print("\t\t%s" % disciplina)
+        
+    input("vai salvar o arquivo linha por linha json - Tecle enter")
+    with open('dict_professores_linha.json','w') as f:
+        for professor_id in dicionario_lido:
+            f.write('%s\n' % (json.dumps({professor_id: dicionario_lido[professor_id]})))
+
+
+    input("vai ler o arquivo linha por linha json - Tecle enter")
+    print("\n\n****************LENDO JSON LINHA POR LINHA****************")
+    with open('dict_professores_linha.json', 'r') as f:
+        for line in f:
+            line = line.strip()
+            json_line = json.loads(line)
+            print(json_line.keys())
+            professor_id = list(json_line.keys()).pop()
+            professor_data = json_line[professor_id]
+            print("%s:%s" % (professor_id, professor_data))
+
+
+    # SALVANDO COMO TSV
+    with open('dict_professores_tsv.tsv', 'w') as f:
+        f.write("prof_id\tprof_name\tprof_dpt\tprof_dic\n")
+        for professor_id in dicionario_lido:
+            lista_disciplinas = dicionario_lido[professor_id]['disciplinas']
+            num_disciplinas = len(lista_disciplinas)
+            f.write("%s\t%s\t%s\t%d\n" % (professor_id, dicionario_lido[professor_id]['nome']))
 
 
 if __name__ == "__main__":
